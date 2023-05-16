@@ -52,6 +52,32 @@ eval_conditions <- function(element, condition, comparison_value) {
   conditions[[condition]](element, comparison_value)
 }
 
-
-
+#' Primary Conditions Evaluation
+#'
+#' This function evaluates a set of conditions for a specific inputs. The purpose of this function is to determine
+#' whether a specific condition is met for the input. The conditions are evaluated based on the 'condition' argument
+#' and, if necessary, a 'comparison_value'.
+#'
+#' @param input A list of all the inputs in a Shiny application, usually provided within a reactive context.
+#' @param input_id Character. The ID of the input to evaluate.
+#' @param condition Character. The condition to evaluate. This can be any condition that can be evaluated by the
+#'   'eval_conditions' function, including 'is_null' which checks if the input value is NULL.
+#' @param comparison_value The value to compare the input value to, if necessary. This is used by the 'eval_conditions'
+#'   function to evaluate conditions that require a comparison.
+#'
+#' @return This function returns TRUE if the input value meets the specified condition.
+#' @keywords internal
+primary_conditions <- function(input, input_id, condition, comparison_value) {
+  value_input <- input[[input_id]]
+  result_condition <- NULL
+  if (condition == "is_null") {
+   if(is.null(value_input)) return()
+  } else {
+    if (!is.null(value_input)) {
+      result_condition <- eval_conditions(value_input, condition, comparison_value)
+      if (!result_condition) return()
+    }
+  }
+  result_condition
+}
 
