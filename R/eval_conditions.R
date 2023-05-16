@@ -53,28 +53,5 @@ eval_conditions <- function(element, condition, comparison_value) {
 }
 
 
-# equals: Checks if two values are equal.
-# not_equals: Checks if two values are not equal.
-# is_any_of: Checks if the first value is included in the second value, which is expected to be a set or collection.
-# is_none_of: Checks if the first value is not included in the second value, which is expected to be a set or collection.
-# has: Checks if the first value, expected to be a set or collection, includes the second value.
-# contains: Checks if the first value, expected to be a string, contains the second value.
-# any_contains: Checks if any element of the first value, expected to be a collection of strings, contains the second value.
-# contained_in: Checks if the first value, expected to be a string, is contained in the second value.
-# contained_in_all_of: Checks if the first value, expected to be a string, is contained in all elements of the second value, which is expected to be a collection of strings.
-# contained_in_any_of: Checks if the first value, expected to be a string, is contained in any element of the second value, which is expected to be a collection of strings.
-# contained_in_none_of: Checks if the first value, expected to be a string, is not contained in any element of the second value, which is expected to be a collection of strings.
-# does_not_contain: Checks if the first value, expected to be a string, does not contain the second value.
-# in: Checks if the first value is included in the second value, which is expected to be a set or collection.
-# not_in: Checks if the first value is not included in the second value, which is expected to be a set or collection.
-# in_range: Checks if the first value is within the range of the second value, which is expected to be a numeric range.
-# is_between: Similar to in_range, but it excludes the endpoints of the range.
-# less_than: Checks if the first value is less than the second value.
-# is_within: Similar to in_range.
-# is_before: Similar to less_than.
-# is_after: Checks if the first value is greater than the second value.
-# greater_than: Checks if the first value is greater than the second value.
-# is_empty: Checks if the first value is empty or NULL.
-# is_not_empty: Checks if the first value is not empty or NULL.
 
 
