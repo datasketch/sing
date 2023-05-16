@@ -30,6 +30,16 @@ conditions <- list(
   is_not_empty = function(x, y) !is.null(x) && length(x) > 0
 )
 
+
+external_condition <- list(
+  any_of = function(logical_values) any(logical_values),
+  equals = function(logical_values) all(logical_values),
+  all_false = function(logical_values) !all(logical_values)
+)
+
+
+
+
 #' Evaluate a Condition
 #'
 #' This function takes two values and a condition, and evaluates the condition on the values.
@@ -69,15 +79,19 @@ eval_conditions <- function(element, condition, comparison_value) {
 #' @keywords internal
 primary_conditions <- function(input, input_id, condition, comparison_value) {
   value_input <- input[[input_id]]
-  result_condition <- NULL
+  result_condition <- TRUE
   if (condition == "is_null") {
-   if(is.null(value_input)) return()
+    result_condition <- is.null(value_input)
   } else {
     if (!is.null(value_input)) {
       result_condition <- eval_conditions(value_input, condition, comparison_value)
-      if (!result_condition) return()
     }
   }
   result_condition
 }
 
+#' @keywords internal
+secondary_conditions <- function(logical_values, condition) {
+  if (is.null(logical_values)) return()
+  external_condition[[condition]](logical_values)
+}
