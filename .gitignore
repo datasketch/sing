@@ -2,4 +2,6 @@
 .RData
 .Rproj.user
 .Rprofile
-.Rproj.user
+
+# DS credentials
+.DS_STORE
