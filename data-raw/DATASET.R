@@ -1,6 +1,8 @@
-## code to prepare `DATASET` dataset goes here
-
-#usethis::use_data(DATASET, overwrite = TRUE)
+#This list is a comprehensive mapping of Shiny inputs to their corresponding
+#update functions, along with necessary parameters and the libraries they belong to.
+library(readr)
+update_info <- read_csv("data-raw/data/sing/general-input.csv")
+usethis::use_data(update_info, overwrite = TRUE)
 
 
 input_list <- jsonlite::read_json("data-raw/data/inputs.json")
