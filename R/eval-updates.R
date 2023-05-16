@@ -1,10 +1,5 @@
 
 
-#' @export
-available_inputs <- function() {
-  update_info$input
-}
-
 #' Update a Shiny input
 #'
 #' This function updates a Shiny input based on the type of input and new values provided.
