@@ -1,12 +1,11 @@
 Package: sing
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Shiny inputs generator
+Version: 0.0.1
 Authors@R: 
     person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Description: Automate the input generation in Shiny based on a database or a parameter list.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
