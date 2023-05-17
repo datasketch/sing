@@ -5,3 +5,6 @@
 
 # DS credentials
 .DS_STORE
+data-raw/data/sample
+data-raw/app.R
+data-raw/test_base.R

@@ -23,7 +23,7 @@
 #' # Use the function to get recommended input controls
 #' recommended_inputs <- input_recommender(df)
 #' }
-input_recommender <- function(data, dic = NULL) {
+input_recommender <- function(data, dic = NULL, inputs_from_json = NULL) {
   if (is.null(data)) return()
   if (is.null(dic)) {
     dic <- hdtable::create_dic(data)
@@ -39,27 +39,27 @@ input_recommender <- function(data, dic = NULL) {
     info_id <- dic |>
       dplyr::filter(id %in% .x)
     input_dic <- info_id$input
-    input_recommender$inputs <- input_properties$inputs[input_dic]
-    input_recommender$inputs[[input_dic]]$inputId <- paste0(.x, "_id")
-    input_recommender$inputs[[input_dic]]$label <- info_id$label
+    input_recommender$inputs[[.x]] <- input_properties$inputs[input_dic]
+    input_recommender$inputs[[.x]][[input_dic]]$inputId <- paste0(.x, "_input")
+    input_recommender$inputs[[.x]][[input_dic]]$label <- info_id$label
 
 
-    if ("choices" %in% names(input_recommender$inputs[[info_id$input]])) {
-      input_recommender$inputs[[info_id$input]]$choices <- setNames(dic$format[[.x]]$categories, dic$format[[.x]]$labels)
+    if ("choices" %in% names(input_recommender$inputs[[.x]][[info_id$input]])) {
+      input_recommender$inputs[[.x]][[input_dic]]$choices <- setNames(dic$format[[.x]]$categories, dic$format[[.x]]$labels)
     }
 
 
     if (input_dic == "dateRangeInput") {
-      input_recommender$inputs$dateRangeInput$start <- info_id$stats[[.x]]$min
-      input_recommender$inputs$dateRangeInput$end <- info_id$stats[[.x]]$max
-      input_recommender$inputs$dateRangeInput$min <- info_id$stats[[.x]]$min
-      input_recommender$inputs$dateRangeInput$max <- info_id$stats[[.x]]$max
+      input_recommender$inputs[[.x]]$dateRangeInput$start <- info_id$stats[[.x]]$min
+      input_recommender$inputs[[.x]]$dateRangeInput$end <- info_id$stats[[.x]]$max
+      input_recommender$inputs[[.x]]$dateRangeInput$min <- info_id$stats[[.x]]$min
+      input_recommender$inputs[[.x]]$dateRangeInput$max <- info_id$stats[[.x]]$max
     }
 
     if (input_dic %in% c("sliderInput", "numberInput")) {
-      input_recommender$inputs[[input_dic]]$value <- info_id$stats[[.x]]$min
-      input_recommender$inputs[[input_dic]]$min <- info_id$stats[[.x]]$min
-      input_recommender$inputs[[input_dic]]$max <- info_id$stats[[.x]]$max
+      input_recommender$inputs[[.x]][[input_dic]]$value <- info_id$stats[[.x]]$min
+      input_recommender$inputs[[.x]][[input_dic]]$min <- info_id$stats[[.x]]$min
+      input_recommender$inputs[[.x]][[input_dic]]$max <- info_id$stats[[.x]]$max
     }
 
     input_recommender
