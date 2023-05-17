@@ -1,4 +1,4 @@
-hdtype-parent,input,library,default,update,update_arg
+hdtype,input,library,default,update,update_arg
 ,actionButton,shiny,,updateActionButton,label
 ,actionLink,shiny,,updateActionLink,label
 Cat,checkboxGroupInput,shiny,,updateCheckboxGroupInput,selected
