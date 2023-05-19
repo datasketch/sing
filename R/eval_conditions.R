@@ -95,3 +95,76 @@ secondary_conditions <- function(logical_values, condition) {
   if (is.null(logical_values)) return()
   external_condition[[condition]](logical_values)
 }
+
+
+# si existen filtros condicionales en el input se condiciona a que se pongan todos
+# los valores por default si no hay valor en el input que esta condicionado
+evaluate_filter_into_input <- function(input,
+                                       conf_list,
+                                       conditions_into_input,
+                                       input_id = NULL) {
+  if ("filter" %in% names(conditions_into_input)) {
+    if (grepl("_input",conditions_into_input$filter$arg)) {
+      arg <- input[[conf_list$what$filter$arg]]
+      id_alt <- input_id
+      if (is.null(id_alt)) return()
+      if (is.null(arg) | arg == "") {
+        conditions_into_input <- list("unique" = list("col" = id_alt))
+      } else {
+        conditions_into_input$filter$arg <- arg
+      }
+    }
+  }
+  conditions_into_input
+}
+
+
+
+
+# son las condiciones que dependen de datos elegidos
+data_dependent_conditions <- function(input,
+                                      conf_list,
+                                      conditions_into_input,
+                                      input_id = NULL,
+                                      data_server = NULL) {
+  if ("table_id" %in% names(conditions_into_input)) { #si tiene table id es porq algun argumento requiere de la base de datps
+    if (is.null(input[["what_table_input"]])) return()
+    if (input[["what_table_input"]] != conditions_into_input$table_id) return()
+    data_select <- data_server[[conditions_into_input$table_id]]
+    conditions_into_input <- sing:::evaluate_filter_into_input(input, conf_list, conditions_into_input, input_id = input_id)
+    conf_list <- sing:::perform_operations(data_select, conditions_into_input)
+  }
+  conf_list
+}
+
+
+#' @export
+internal_conditions <- function(input,
+                                conf_list,
+                                sing_values = NULL,
+                                input_id = NULL,
+                                input_params,
+                                data_server = NULL) {
+  if (!is.null(names(conf_list))) {
+    if ("what" %in% names(conf_list)) {
+      if (length(conf_list$what) == 1) {
+        if (grepl("\\b\\.\\b", conf_list$what)) {
+          conf_list <- sing:::hdbase_names(what_tables = conf_list$what,
+                                           input_params = input_params, conf_list = conf_list)
+        } else {
+          conf_list <- sing_values[[conf_list$what]]
+        }
+      } else {
+        conditions_into_input <- conf_list$what
+        conf_list <- sing:::data_dependent_conditions(input = input,
+                                                      conf_list = conf_list,
+                                                      conditions_into_input = conditions_into_input,
+                                                      input_id = input_id,
+                                                      data_server = data_server)
+
+      }
+    }
+  }
+  conf_list
+}
+
