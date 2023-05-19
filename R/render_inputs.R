@@ -3,7 +3,6 @@ render_sing <- function(session,
                         input,
                         bd,
                         input_params,
-                        #id_inputs,
                         sing_values) {
 
   data_server <- reactiveValues()
@@ -16,13 +15,13 @@ render_sing <- function(session,
       data_server[[input[["what_table_input"]]]] <- bd$hdtables[[input[["what_table_input"]]]]$data
     }
 
-    ll <- prepare_inputs(input = input,
-                         inputs_user = inputs_user,
-                         inputs_data = inputs_data,
-                         input_params = input_params,
-                         input_names = id_inputs,
-                         sing_values = sing_values,
-                         data_server = data_server)
+    pre_inp <- prepare_inputs(input = input,
+                              inputs_user = inputs_user,
+                              inputs_data = inputs_data,
+                              input_params = input_params,
+                              input_names = id_inputs,
+                              sing_values = sing_values,
+                              data_server = data_server)
 
 
     purrr::map(id_inputs, function(id) {

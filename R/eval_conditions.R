@@ -97,8 +97,25 @@ secondary_conditions <- function(logical_values, condition) {
 }
 
 
-# si existen filtros condicionales en el input se condiciona a que se pongan todos
-# los valores por default si no hay valor en el input que esta condicionado
+
+#' @title Evaluate filter conditions in an input
+#'
+#' @description This function evaluates whether an input should be filtered based on its filter conditions.
+#' If a filter condition is present and its argument is non-null and non-empty, the input will be filtered accordingly.
+#' If the filter argument is null or empty, the function sets a default condition to consider only unique values of the input.
+#' If a filter condition is not present, the function does nothing.
+#'
+#' @param input A list of inputs.
+#' @param conf_list A configuration list with filter conditions.
+#' @param conditions_into_input A list of conditions to evaluate for the input.
+#' @param input_id A character string specifying the ID of the input to evaluate. Defaults to NULL.
+#'
+#' @return This function returns the list of conditions for the input after evaluating the presence and value of its filter condition.
+#' If a filter condition is present and its argument is non-null and non-empty, the corresponding filter condition is returned.
+#' If the filter argument is null or empty, a default condition considering only unique values of the input is returned.
+#' If a filter condition is not present, the function returns NULL.
+#'
+
 evaluate_filter_into_input <- function(input,
                                        conf_list,
                                        conditions_into_input,
@@ -108,7 +125,7 @@ evaluate_filter_into_input <- function(input,
       arg <- input[[conf_list$what$filter$arg]]
       id_alt <- input_id
       if (is.null(id_alt)) return()
-      if (is.null(arg) | arg == "") {
+      if (is.null(arg) || arg == "") {
         conditions_into_input <- list("unique" = list("col" = id_alt))
       } else {
         conditions_into_input$filter$arg <- arg
@@ -121,7 +138,17 @@ evaluate_filter_into_input <- function(input,
 
 
 
-# son las condiciones que dependen de datos elegidos
+#' @title Evaluate data-dependent conditions
+#'
+#' @description This function evaluates the conditions that depend on the data stored in the database for a given input.
+#'
+#' @param input A list of inputs.
+#' @param conf_list A list of configuration for each input.
+#' @param conditions_into_input A list of conditions to evaluate for the input.
+#' @param input_id A character string specifying the ID of the input to evaluate. Defaults to NULL.
+#' @param data_server A list of data frames, each named with a table_id.
+#'
+#' @return This function returns the list of configuration for the input after evaluating the data
 data_dependent_conditions <- function(input,
                                       conf_list,
                                       conditions_into_input,
@@ -131,13 +158,25 @@ data_dependent_conditions <- function(input,
     if (is.null(input[["what_table_input"]])) return()
     if (input[["what_table_input"]] != conditions_into_input$table_id) return()
     data_select <- data_server[[conditions_into_input$table_id]]
-    conditions_into_input <- sing:::evaluate_filter_into_input(input, conf_list, conditions_into_input, input_id = input_id)
-    conf_list <- sing:::perform_operations(data_select, conditions_into_input)
+    conditions_into_input <- evaluate_filter_into_input(input, conf_list, conditions_into_input, input_id = input_id)
+    conf_list <- perform_operations(data_select, conditions_into_input)
   }
   conf_list
 }
 
-
+#' Internal Condition Evaluation
+#'
+#' This function evaluates whether the condition is a reactive value, a database access or
+#' a list of conditions. The 'sing_values' parameter indicates the name of the reactive value
+#' that contains the specification of the desired value.
+#'
+#' @param input A list of inputs.
+#' @param conf_list A list of configurations.
+#' @param sing_values The reactive values.
+#' @param input_id The id of the input.
+#' @param input_params Parameters of the input.
+#' @param data_server The data server.
+#' @return The configuration list.
 #' @export
 internal_conditions <- function(input,
                                 conf_list,
@@ -149,18 +188,18 @@ internal_conditions <- function(input,
     if ("what" %in% names(conf_list)) {
       if (length(conf_list$what) == 1) {
         if (grepl("\\b\\.\\b", conf_list$what)) {
-          conf_list <- sing:::hdbase_names(what_tables = conf_list$what,
-                                           input_params = input_params, conf_list = conf_list)
+          conf_list <- hdbase_names(what_tables = conf_list$what,
+                                    input_params = input_params, conf_list = conf_list)
         } else {
           conf_list <- sing_values[[conf_list$what]]
         }
       } else {
         conditions_into_input <- conf_list$what
-        conf_list <- sing:::data_dependent_conditions(input = input,
-                                                      conf_list = conf_list,
-                                                      conditions_into_input = conditions_into_input,
-                                                      input_id = input_id,
-                                                      data_server = data_server)
+        conf_list <- data_dependent_conditions(input = input,
+                                               conf_list = conf_list,
+                                               conditions_into_input = conditions_into_input,
+                                               input_id = input_id,
+                                               data_server = data_server)
 
       }
     }

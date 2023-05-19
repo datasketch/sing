@@ -4,7 +4,17 @@ available_inputs <- function() {
   update_info$input
 }
 
-
+#' @title Get condition operator
+#'
+#' @description This function takes a string specifying a condition and returns the corresponding operator.
+#'
+#' @param condition A character string specifying the condition to translate into an operator. This can be one of the following: "equals", "in", "distinct", "is_na", "is_empty", "is_not_empty", "less_than", "greater_than".
+#'
+#' @return This function returns a string representing the operator corresponding to the condition provided.
+#'
+#' @examples
+#' get_condition("equals") # returns "=="
+#'
 get_condition <- function(condition) {
   switch(condition,
          "equals" = "==",
@@ -20,8 +30,20 @@ get_condition <- function(condition) {
 }
 
 
-# funcion que ejecuta cada posible operacion
-# que se indica en la entrada de la configuracion de inputs
+#' @title Perform operations on a data frame
+#'
+#' @description This function performs a series of operations on a data frame based on a list of operation names.
+#'
+#' @param df A data frame to perform the operations on.
+#' @param operations A list of operations to perform. The operations should be named with the corresponding function names in dplyr package. For example, "filter", "select", "distinct", etc.
+#'
+#' @return This function returns a data frame that is the result of performing the operations on the original data frame.
+#'
+#' @examples
+#' df <- data.frame(a = 1:5, b = 6:10)
+#' operations <- list(filter = list(col = "a", condition = "greater_than", arg = 2))
+#' perform_operations(df, operations) # returns a data frame with a > 2
+#'
 
 perform_operations <- function(df, operations) {
   if ("table_id" %in% names(operations)) {

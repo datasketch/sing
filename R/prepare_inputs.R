@@ -1,3 +1,15 @@
+#' Prepare Inputs
+#'
+#' This function is used to prepare the inputs by calling the internal_conditions function
+#' and storing in a reactive values, the name of the input and its arguments.
+#'
+#' @param input A list of inputs.
+#' @param inputs_user A list of user inputs.
+#' @param inputs_data A list of data inputs.
+#' @param sing_values The reactive values.
+#' @param input_params Parameters of the input.
+#' @param input_names The names of the inputs.
+#' @param data_server The data server.
 #' @export
 prepare_inputs <- function(input,
                            inputs_user,
