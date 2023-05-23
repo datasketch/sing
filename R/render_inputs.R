@@ -35,11 +35,12 @@ render_sing <- function(session,
 
   })
 
-  assign("data_server", data_server, envir = .GlobalEnv)
-  assign("inputs_user", inputs_user, envir = .GlobalEnv)
 
   list(
+    data_server = data_server,
+    inputs_user = inputs_user,
     inputs_id = id_inputs,
+    input_params = input_params,
     inputs_data = inputs_data
   )
 }
@@ -69,13 +70,7 @@ output_sing <- function(input, output, id_inputs, input_params, inputs_data) {
 
 
 #' @export
-sing <- function(session, input, output, output_id, input_params, sing_values) {
-  results <- render_sing(session,
-                         input,
-                         bd = bd,
-                         input_params = input_params,
-                         sing_values = sing_values)
-
+sing <- function(session, input, output, output_id, results) {
   inputs_data <- results$inputs_data
   output_sing(input,
               output,
