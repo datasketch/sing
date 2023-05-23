@@ -6,6 +6,7 @@ render_sing <- function(session,
                         sing_values) {
 
   data_server <- reactiveValues()
+  data_filter <- reactiveValues()
   inputs_user <- reactiveValues()
   inputs_data <- reactiveValues()
   id_inputs <- setdiff(names(input_params$inputs), c("exclude", "include"))
@@ -13,6 +14,9 @@ render_sing <- function(session,
   observe({
     if (!is.null(input[["what_table_input"]])) {
       data_server[[input[["what_table_input"]]]] <- bd$hdtables[[input[["what_table_input"]]]]$data
+      dic <- bd$hdtables[[input[["what_table_input"]]]]$dic
+      data_filter <- dsdataprep::data_filter(data = data_server[[input[["what_table_input"]]]],
+                                             dic = dic, var_inputs = inputs_user)
     }
 
     pre_inp <- prepare_inputs(input = input,
@@ -38,6 +42,7 @@ render_sing <- function(session,
 
   list(
     data_server = data_server,
+    data_filter = data_filter,
     inputs_user = inputs_user,
     inputs_id = id_inputs,
     input_params = input_params,
@@ -54,12 +59,14 @@ output_sing <- function(input, output, id_inputs, input_params, inputs_data) {
       if ("conditions" %in% names(input_params$inputs[[id]])) {
         input_conditions <- input_params$inputs[[id]]$conditions
         input_depend <- names(input_conditions)
-        if (!is.null(input[[input_depend]])) {
-          pass_condition <- sing:::primary_conditions(input, input_id = input_depend,
-                                                      condition = names(input_conditions[[input_depend]]),
-                                                      comparison_value = input_conditions[[input_depend]][[names(input_conditions[[input_depend]])]])
+        pass_condition <- purrr::map(input_depend, function(input_depend) {
+          if (is.null(input[[input_depend]])) pass_condition <- TRUE
+            sing:::primary_conditions(input, input_id = input_depend,
+                                      condition = names(input_conditions[[input_depend]]),
+                                      comparison_value = input_conditions[[input_depend]][[names(input_conditions[[input_depend]])]])
 
-        }
+        }) |> unlist()
+        pass_condition <- all(pass_condition)
       }
       if (pass_condition) {
         do.call(inputs_data[[id]]$input_type, inputs_data[[id]]$input_params)
