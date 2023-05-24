@@ -10,54 +10,6 @@ render_sing <- function(session,
   inputs_data <- reactiveValues()
   id_inputs <- setdiff(names(input_params$inputs), c("exclude", "include"))
 
-  # data_filter <- reactive({
-  #   if (!is.null(input[["what_table_input"]])) {
-  #     df <- data_server[[input[["what_table_input"]]]]
-  #     dic <- bd$hdtables[[input[["what_table_input"]]]]$dic
-  #     purrr::map(id_inputs, function(id) {
-  #       if (id != "what_table_input") {
-  #         if (!is.null(inputs_user[[id]])) {
-  #           name_var <- input_params$inputs[[id]]$id
-  #           info_var <- dic |> dplyr::filter(id %in% name_var)
-  #           list_filters <- inputs_user[[id]]
-  #           names(list_filters) <- name_var
-  #           if (info_var$hdtype %in% "Cat") {
-  #           df <<- df |>
-  #             dplyr::filter(!!dplyr::sym(name_var) %in% inputs_user[[id]])
-  #           }
-  #           if (info_var$hdtype == "Dat" || info_var$hdtype == "Num") {
-  #             df <<- df |>
-  #               filter_ranges(range = inputs_user[[id]], by = info_var$id)
-  #           }
-  #         }
-  #       }
-  #     })
-  #     df
-  #   }
-  # })
-  # data_filter <- reactive({
-  #   if (!is.null(input[["what_table_input"]])) {
-  #     df <- data_server[[input[["what_table_input"]]]]
-  #     dic <- bd$hdtables[[input[["what_table_input"]]]]$dic
-  #     for(id in id_inputs){
-  #       if (id != "what_table_input") {
-  #         if (!is.null(inputs_user[[id]])) {
-  #           name_var <- input_params$inputs[[id]]$id
-  #           info_var <- dic |> dplyr::filter(id %in% name_var)
-  #           list_filters <- inputs_user[[id]]
-  #           names(list_filters) <- name_var
-  #           if (info_var$hdtype %in% "Cat") {
-  #             df <- df |> dplyr::filter(!!dplyr::sym(name_var) %in% inputs_user[[id]])
-  #           }
-  #           if (info_var$hdtype == "Dat" || info_var$hdtype == "Num") {
-  #             df <- df |> filter_ranges(range = inputs_user[[id]], by = info_var$id)
-  #           }
-  #         }
-  #       }
-  #     }
-  #     return(df)
-  #   }
-  # })
 
   data_filter <- reactive({
     if (!is.null(input[["what_table_input"]])) {
@@ -82,6 +34,8 @@ render_sing <- function(session,
       df
     }
   })
+
+
   observe({
 
     data_server$filter <- data_filter()
