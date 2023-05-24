@@ -6,18 +6,92 @@ render_sing <- function(session,
                         sing_values) {
 
   data_server <- reactiveValues()
-  #data <- reactiveValues()
   inputs_user <- reactiveValues()
   inputs_data <- reactiveValues()
   id_inputs <- setdiff(names(input_params$inputs), c("exclude", "include"))
 
+  # data_filter <- reactive({
+  #   if (!is.null(input[["what_table_input"]])) {
+  #     df <- data_server[[input[["what_table_input"]]]]
+  #     dic <- bd$hdtables[[input[["what_table_input"]]]]$dic
+  #     purrr::map(id_inputs, function(id) {
+  #       if (id != "what_table_input") {
+  #         if (!is.null(inputs_user[[id]])) {
+  #           name_var <- input_params$inputs[[id]]$id
+  #           info_var <- dic |> dplyr::filter(id %in% name_var)
+  #           list_filters <- inputs_user[[id]]
+  #           names(list_filters) <- name_var
+  #           if (info_var$hdtype %in% "Cat") {
+  #           df <<- df |>
+  #             dplyr::filter(!!dplyr::sym(name_var) %in% inputs_user[[id]])
+  #           }
+  #           if (info_var$hdtype == "Dat" || info_var$hdtype == "Num") {
+  #             df <<- df |>
+  #               filter_ranges(range = inputs_user[[id]], by = info_var$id)
+  #           }
+  #         }
+  #       }
+  #     })
+  #     df
+  #   }
+  # })
+  # data_filter <- reactive({
+  #   if (!is.null(input[["what_table_input"]])) {
+  #     df <- data_server[[input[["what_table_input"]]]]
+  #     dic <- bd$hdtables[[input[["what_table_input"]]]]$dic
+  #     for(id in id_inputs){
+  #       if (id != "what_table_input") {
+  #         if (!is.null(inputs_user[[id]])) {
+  #           name_var <- input_params$inputs[[id]]$id
+  #           info_var <- dic |> dplyr::filter(id %in% name_var)
+  #           list_filters <- inputs_user[[id]]
+  #           names(list_filters) <- name_var
+  #           if (info_var$hdtype %in% "Cat") {
+  #             df <- df |> dplyr::filter(!!dplyr::sym(name_var) %in% inputs_user[[id]])
+  #           }
+  #           if (info_var$hdtype == "Dat" || info_var$hdtype == "Num") {
+  #             df <- df |> filter_ranges(range = inputs_user[[id]], by = info_var$id)
+  #           }
+  #         }
+  #       }
+  #     }
+  #     return(df)
+  #   }
+  # })
+
+  data_filter <- reactive({
+    if (!is.null(input[["what_table_input"]])) {
+      df <- data_server[[input[["what_table_input"]]]]
+      dic <- bd$hdtables[[input[["what_table_input"]]]]$dic
+
+      df <- purrr::reduce(id_inputs, function(df, id) {
+        if (id != "what_table_input" && !is.null(inputs_user[[id]])) {
+          name_var <- input_params$inputs[[id]]$id
+          info_var <- dic |> dplyr::filter(id %in% name_var)
+          list_filters <- inputs_user[[id]]
+          names(list_filters) <- name_var
+          if (info_var$hdtype %in% "Cat") {
+            df <- df |> dplyr::filter(!!dplyr::sym(name_var) %in% inputs_user[[id]])
+          }
+          if (info_var$hdtype == "Dat" || info_var$hdtype == "Num") {
+            df <- df |> filter_ranges(range = inputs_user[[id]], by = info_var$id)
+          }
+        }
+        df
+      }, .init = df)
+      df
+    }
+  })
   observe({
+
+    data_server$filter <- data_filter()
+
     if (!is.null(input[["what_table_input"]])) {
       data_server[[input[["what_table_input"]]]] <- bd$hdtables[[input[["what_table_input"]]]]$data
     }
 
     pre_inp <- prepare_inputs(input = input,
-                              inputs_user = inputs_user,
+                              #inputs_user = inputs_user,
                               inputs_data = inputs_data,
                               input_params = input_params,
                               input_names = id_inputs,
@@ -26,19 +100,8 @@ render_sing <- function(session,
 
 
     purrr::map(id_inputs, function(id) {
-
+      inputs_user[[id]] <- input[[id]]
       if (!is.null(input[[id]])) {
-        if (!is.null(input[["what_table_input"]]) & input[[id]] != "") {
-          if (id != "what_table_input") {
-            list_filters <- list(input[[id]])
-            names(list_filters) <- input_params$inputs[[id]]$id
-            #print(data_server[[input[["what_table_input"]]]])
-            dic <- bd$hdtables[[input[["what_table_input"]]]]$dic
-            data_server$filter <- dsdataprep::data_filter(data = data_server[[input[["what_table_input"]]]],
-                                                   dic = dic, var_inputs = list_filters)
-
-          }
-        }
         update_input(session = session,
                      input_id = id,
                      input_type = input_params$inputs[[id]]$input_type,
@@ -49,9 +112,10 @@ render_sing <- function(session,
   })
 
 
+
+
   list(
     data_server = data_server,
-    #data_filter = data_filter,
     inputs_user = inputs_user,
     inputs_id = id_inputs,
     input_params = input_params,

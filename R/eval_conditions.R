@@ -184,6 +184,7 @@ internal_conditions <- function(input,
                                 input_id = NULL,
                                 input_params,
                                 data_server = NULL) {
+
   if (!is.null(names(conf_list))) {
     if ("what" %in% names(conf_list)) {
       if (length(conf_list$what) == 1) {
@@ -204,6 +205,7 @@ internal_conditions <- function(input,
       }
     }
   }
+
   conf_list
 }
 

@@ -82,4 +82,24 @@ hdbase_names <- function(what_tables, input_params, conf_list) {
 }
 
 
+filter_ranges <- function(data, range, by) {
+  if (is.null(data)) return()
 
+  min_date <- min(data[[by]], na.rm = TRUE)
+  max_date <- max(data[[by]], na.rm = TRUE)
+
+  if (length(range) == 2) {
+    if (min_date == range[1] & max_date == range[2]) {
+      data_filter <- data
+    } else {
+      data_filter <- data |>
+        dplyr::filter(!!dplyr::sym(by) >= range[1] &
+                        !!dplyr::sym(by) <= range[2])
+    }
+  } else {
+    data_filter <-  data |>
+      dplyr::filter(!!dplyr::sym(by) == range)
+  }
+  data_filter
+
+}

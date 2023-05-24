@@ -12,7 +12,6 @@
 #' @param data_server The data server.
 #' @export
 prepare_inputs <- function(input,
-                           inputs_user,
                            inputs_data,
                            sing_values = NULL,
                            input_params,
@@ -20,7 +19,6 @@ prepare_inputs <- function(input,
                            data_server = NULL) {
 
   purrr::map(input_names, function(id){
-    inputs_user[[id]] <- input[[id]]
     inputs_data[[id]]$input_type <- input_params$inputs[[id]]$input_type
     input_arg <- input_params$inputs[[id]]$input_params
     input_names_arg <- names(input_arg)
