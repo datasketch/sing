@@ -41,34 +41,45 @@ get_condition <- function(condition) {
 #'
 #' @examples
 #' df <- data.frame(a = 1:5, b = 6:10)
-#' operations <- list(filter = list(col = "a", condition = "greater_than", arg = 2))
+#' operations <- list(filter = list(col = "a", condition = "greater_than", arg = 2), setNames = list(col = "a", col_name = "b"))
 #' perform_operations(df, operations) # returns a data frame with a > 2
 #'
 
 perform_operations <- function(df, operations) {
+
   if ("table_id" %in% names(operations)) {
     operations <- operations[-grep("table_id", names(operations))]
   }
+  df <- purrr::reduce(names(operations), function(data, op_name) {
+    op <- operations[[op_name]]
 
-  if ("unique" %in% names(operations)) {
-    df <- unique(df[[operations$unique$col]])
-  } else {
-    df <- purrr::reduce(names(operations), function(data, op_name) {
-      op <- operations[[op_name]]
-      if(op_name == "filter") {
-        condition <- get_condition(op$condition)
-        arg <- paste0("'", op$arg, "'")
-        if (length(arg) > 1) {
-          arg <-  paste0("c(",paste0(arg, collapse = ","), ")")
-        }
-        expr <- paste0(op$col, condition, arg)
-        args <- list(rlang::parse_expr(expr))
-      } else {
-        args <- list(rlang::sym(op$col))
+    if(op_name == "filter") {
+      condition <- get_condition(op$condition)
+      arg <- paste0("'", op$arg, "'")
+      if (length(arg) > 1) {
+        arg <-  paste0("c(",paste0(arg, collapse = ","), ")")
       }
+      expr <- paste0(op$col, condition, arg)
+      args <- list(rlang::parse_expr(expr))
+    } else if (op_name == "unique") {
+      args <- list(x = data[[op$col]])
+    } else if (op_name == "setNames") {
+      args <- list(object = data[[op$col]], nm = data[[op$col_name]])
+    } else {
+      args <- list(rlang::sym(op$col))
+    }
+
+    if(op_name %in% ls("package:dplyr")) {
       do.call(get(op_name, "package:dplyr"), c(list(data), args))
-    }, .init = df)
-  }
+    } else if (op_name %in% ls("package:base")) {
+      do.call(get(op_name, "package:base"), args)
+    } else if (op_name %in% ls("package:stats")) {
+      do.call(get(op_name, "package:stats"), args)
+    } else {
+      stop(paste0("Operation ", op_name, " not found in dplyr or base packages."))
+    }
+  }, .init = df)
+
   return(df)
 }
 
