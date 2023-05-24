@@ -6,7 +6,6 @@
 \usage{
 prepare_inputs(
   input,
-  inputs_user,
   inputs_data,
   sing_values = NULL,
   input_params,
@@ -17,8 +16,6 @@ prepare_inputs(
 \arguments{
 \item{input}{A list of inputs.}
 
-\item{inputs_user}{A list of user inputs.}
-
 \item{inputs_data}{A list of data inputs.}
 
 \item{sing_values}{The reactive values.}
@@ -28,6 +25,8 @@ prepare_inputs(
 \item{input_names}{The names of the inputs.}
 
 \item{data_server}{The data server.}
+
+\item{inputs_user}{A list of user inputs.}
 }
 \description{
 This function is used to prepare the inputs by calling the internal_conditions function

@@ -57,7 +57,11 @@ perform_operations <- function(df, operations) {
       op <- operations[[op_name]]
       if(op_name == "filter") {
         condition <- get_condition(op$condition)
-        expr <- paste0(op$col, condition, "'", op$arg, "'")
+        arg <- paste0("'", op$arg, "'")
+        if (length(arg) > 1) {
+          arg <-  paste0("c(",paste0(arg, collapse = ","), ")")
+        }
+        expr <- paste0(op$col, condition, arg)
         args <- list(rlang::parse_expr(expr))
       } else {
         args <- list(rlang::sym(op$col))

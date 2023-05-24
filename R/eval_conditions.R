@@ -125,7 +125,7 @@ evaluate_filter_into_input <- function(input,
       arg <- input[[conf_list$what$filter$arg]]
       id_alt <- input_id
       if (is.null(id_alt)) return()
-      if (is.null(arg) || arg == "") {
+      if (all(is.null(arg)) || all(arg == "")) {
         conditions_into_input <- list("unique" = list("col" = id_alt))
       } else {
         conditions_into_input$filter$arg <- arg

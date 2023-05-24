@@ -45,7 +45,6 @@ render_sing <- function(session,
     }
 
     pre_inp <- prepare_inputs(input = input,
-                              #inputs_user = inputs_user,
                               inputs_data = inputs_data,
                               input_params = input_params,
                               input_names = id_inputs,
