@@ -20,6 +20,7 @@ render_sing <- function(session,
         if (id != "what_table_input" && !is.null(inputs_user[[id]])) {
           name_var <- input_params$inputs[[id]]$id
           info_var <- dic |> dplyr::filter(id %in% name_var)
+          if (nrow(info_var) == 0) return(df)
           list_filters <- inputs_user[[id]]
           names(list_filters) <- name_var
           if (info_var$hdtype %in% "Cat") {
