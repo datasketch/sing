@@ -52,7 +52,6 @@ perform_operations <- function(df, operations) {
   }
   df <- purrr::reduce(names(operations), function(data, op_name) {
     op <- operations[[op_name]]
-  print(op_name)
     if(op_name == "filter") {
       condition <- get_condition(op$condition)
       arg <- paste0("'", op$arg, "'")
