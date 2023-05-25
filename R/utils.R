@@ -52,7 +52,7 @@ perform_operations <- function(df, operations) {
   }
   df <- purrr::reduce(names(operations), function(data, op_name) {
     op <- operations[[op_name]]
-
+  print(op_name)
     if(op_name == "filter") {
       condition <- get_condition(op$condition)
       arg <- paste0("'", op$arg, "'")
@@ -62,15 +62,17 @@ perform_operations <- function(df, operations) {
       expr <- paste0(op$col, condition, arg)
       args <- list(rlang::parse_expr(expr))
     } else if (op_name %in% ls("package:base")) {
-      args <- list(x = data[[op$col]])
-    } else if (op_name == "setNames") {
-      args <- list(object = data[[op$col]], nm = data[[op$col_name]])
-    } else if (op_name == "list") {
+      if (op_name == "list") {
       args <- purrr::map(unique(data[[op$col_name]]), function(i) {
         data <- data |> dplyr::filter(!!dplyr::sym(op$col_name) %in% i)
         unique(data[[op$col]])
       })
       names(args) <- unique(data[[op$col_name]])
+      } else {
+      args <- list(x = data[[op$col]])
+      }
+    } else if (op_name == "setNames") {
+      args <- list(object = data[[op$col]], nm = data[[op$col_name]])
     } else {
       args <- list(rlang::sym(op$col))
     }
@@ -82,11 +84,13 @@ perform_operations <- function(df, operations) {
     if(op_name %in% ls("package:dplyr")) {
       do.call(get(op_name, "package:dplyr"), c(list(data), args))
     } else if (op_name %in% ls("package:base")) {
+      if (op_name == "list") {
+        args
+      } else {
       do.call(get(op_name, "package:base"), args)
+      }
     } else if (op_name %in% ls("package:stats")) {
       do.call(get(op_name, "package:stats"), args)
-    } else if (op_name == "list") {
-      args
     } else {
       stop(paste0("Operation ", op_name, " not found in dplyr or base packages."))
     }
@@ -110,6 +114,8 @@ hdbase_names <- function(what_tables, input_params, conf_list) {
 
 filter_ranges <- function(data, range, by) {
   if (is.null(data)) return()
+  if (is.null(range)) return()
+  if (all("" %in% range)) return()
 
   min_date <- min(data[[by]], na.rm = TRUE)
   max_date <- max(data[[by]], na.rm = TRUE)
