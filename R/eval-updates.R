@@ -61,7 +61,11 @@ update_input <- function(session, input_id, input_type, new_values) {
   update_info <- update_info |> dplyr::filter(input %in% input_type)
   update_func <- getFromNamespace(update_info$update, update_info$library)
   update_arg <- strsplit(update_info$update_arg, split = "\\|") |> unlist()
+  if (length(new_values) == 1) {
   new_values <- list(new_values)
+  } else {
+    new_values <- purrr::map(new_values, ~.x)
+  }
   names(new_values) <- update_arg
   update_args <- c(list(session, input_id), new_values)
   do.call(update_func, update_args)

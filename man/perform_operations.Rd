@@ -19,7 +19,7 @@ This function performs a series of operations on a data frame based on a list of
 }
 \examples{
 df <- data.frame(a = 1:5, b = 6:10)
-operations <- list(filter = list(col = "a", condition = "greater_than", arg = 2))
+operations <- list(filter = list(col = "a", condition = "greater_than", arg = 2), setNames = list(col = "a", col_name = "b"))
 perform_operations(df, operations) # returns a data frame with a > 2
 
 }

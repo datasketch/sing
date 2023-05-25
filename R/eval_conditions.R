@@ -126,7 +126,12 @@ evaluate_filter_into_input <- function(input,
       id_alt <- input_id
       if (is.null(id_alt)) return()
       if (all(is.null(arg)) || all(arg == "")) {
+        if (length(id_alt) == 1) {
         conditions_into_input <- list("unique" = list("col" = id_alt))
+        } else {
+          conditions_into_input <- list("distinct" = list("col" = id_alt[1], "extra" = list(".keep_all" = TRUE)),
+                                        "setNames" = list("col" = id_alt[1], "col_name" = id_alt[2]))
+        }
       } else {
         conditions_into_input$filter$arg <- arg
       }
@@ -158,7 +163,10 @@ data_dependent_conditions <- function(input,
     if (is.null(input[["what_table_input"]])) return()
     if (input[["what_table_input"]] != conditions_into_input$table_id) return()
     data_select <- data_server[[conditions_into_input$table_id]]
-    conditions_into_input <- evaluate_filter_into_input(input, conf_list, conditions_into_input, input_id = input_id)
+    conditions_into_input <- evaluate_filter_into_input(input,
+                                                        conf_list,
+                                                        conditions_into_input,
+                                                        input_id = input_id)
     conf_list <- perform_operations(data_select, conditions_into_input)
   }
   conf_list

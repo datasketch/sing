@@ -25,10 +25,14 @@ prepare_inputs <- function(input,
 
     input_arg <-  purrr::map(input_names_arg, function(arg) {
       conf_list <- input_arg[[arg]]
+      in_id <- input_params$inputs[[id]]$id
+      if ("id_alt" %in% names(input_params$inputs[[id]])) {
+        in_id <- c(input_params$inputs[[id]]$id, input_params$inputs[[id]]$id_alt)
+      }
       conf_list <- internal_conditions(input = input,
                                        conf_list = conf_list,
                                        sing_values = sing_values,
-                                       input_id = input_params$inputs[[id]]$id,
+                                       input_id = in_id,
                                        input_params = input_params,
                                        data_server = data_server)
       conf_list
