@@ -61,7 +61,7 @@ perform_operations <- function(df, operations) {
       }
       expr <- paste0(op$col, condition, arg)
       args <- list(rlang::parse_expr(expr))
-    } else if (op_name == "unique") {
+    } else if (op_name %in% ls("package:base")) {
       args <- list(x = data[[op$col]])
     } else if (op_name == "setNames") {
       args <- list(object = data[[op$col]], nm = data[[op$col_name]])
@@ -73,9 +73,10 @@ perform_operations <- function(df, operations) {
       names(args) <- unique(data[[op$col_name]])
     } else {
       args <- list(rlang::sym(op$col))
-      if ("extra" %in% names(op)) {
-        args <- c(args, op$extra)
-      }
+    }
+
+    if ("extra" %in% names(op)) {
+      args <- c(args, op$extra)
     }
 
     if(op_name %in% ls("package:dplyr")) {
@@ -90,7 +91,6 @@ perform_operations <- function(df, operations) {
       stop(paste0("Operation ", op_name, " not found in dplyr or base packages."))
     }
   }, .init = df)
-
   return(df)
 }
 
