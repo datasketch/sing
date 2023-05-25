@@ -23,7 +23,7 @@ render_sing <- function(session,
           if (nrow(info_var) == 0) return(df)
           list_filters <- inputs_user[[id]]
           names(list_filters) <- name_var
-          if (info_var$hdtype %in% "Cat") {
+          if (info_var$hdtype %in% c("Cat", "Yea")) {
             df <- df |> dplyr::filter(!!dplyr::sym(name_var) %in% inputs_user[[id]])
           }
           if (info_var$hdtype == "Dat" || info_var$hdtype == "Num") {
