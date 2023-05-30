@@ -40,7 +40,21 @@ render_sing <- function(session,
       df
     }, .init = df)
 
-
+    if (!is.null(df)) {
+      if (nrow(df) > 0) {
+        if ("data_filter" %in% names(input_params)) {
+          data_filter_cond <- input_params$data_filter
+          df <- purrr::map_df(names(data_filter_cond), function(d) {
+            if (input[["what_table_input"]] != d) return()
+            conf_list <- data_filter_cond[[d]]
+            if ("arg" %in% names(conf_list[[1]])) {
+              conf_list[[1]]$arg <- input[[conf_list[[1]]$arg]]
+            }
+            perform_operations(df, operations = conf_list)
+          })
+        }
+      }
+    }
 
     opts_viz <- theme_viz_func(df = df,
                                input = input,
