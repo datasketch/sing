@@ -13,6 +13,9 @@ select_logic <- function(d, df, input, input_params, sing_values) {
   info_var <- input_params$selector[[d]][[cond_select]]
   var <-  if ("var_select" %in% names(info_var)) info_var$var_select
   if (is.null(var)) return()
+  var_cat <- var$var_cat |> unlist(use.names = F)
+  var_dat <- var$var_dat |> unlist(use.names = F)
+  var_num <- var$var_num |> unlist(use.names = F)
   var_select <- unlist(var, use.names = FALSE)
 
   data_to_select <- df[,var_select]
@@ -20,8 +23,8 @@ select_logic <- function(d, df, input, input_params, sing_values) {
 
   data_to_select <- dsdataprep::aggregation_data(data = data_to_select,
                                                  agg = agg,
-                                                 group_var = c(var$var_cat, var$var_dat),
-                                                 to_agg = var$var_num,
+                                                 group_var = c(var_cat, var_dat),
+                                                 to_agg = var_num,
                                                  agg_name = info_var$agg_name)
   theme <- if (!is.null(data_to_select)) list(data = data_to_select)
   if ("titles" %in% names(info_var)) {
