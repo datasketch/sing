@@ -13,13 +13,26 @@ select_logic <- function(d, df, input, input_params, sing_values) {
   info_var <- input_params$selector[[d]][[cond_select]]
   var <-  if ("var_select" %in% names(info_var)) info_var$var_select
   if (is.null(var)) return()
-  var_cat <- var$var_cat |> unlist(use.names = F)
-  var_dat <- var$var_dat |> unlist(use.names = F)
-  var_num <- var$var_num |> unlist(use.names = F)
-  var_select <- unlist(var, use.names = FALSE)
+  var_list <- purrr::map(names(var), function(v) {
+    var_select <- NULL
+    var_opts <- var[[v]]
+    if ("what" %in% names(var_opts)) {
+      print(var_opts$what)
+      var_select <- input[[var_opts$what]]
+    } else {
+      var_select <- var_opts
+    }
+  })
+  names(var_list) <- names(var)
+  var_cat <- var_list$var_cat |> unlist(use.names = F)
+  var_dat <- var_list$var_dat |> unlist(use.names = F)
+  var_num <- var_list$var_num |> unlist(use.names = F)
+  var_select <- unlist(var_list, use.names = FALSE)
 
   data_to_select <- df[,var_select]
-  agg <- ifelse(is.null(info_var$agg), ifelse(!is.null(var$var_num), "sum", "count"), info_var$agg)
+
+  agg <- ifelse(is.null(info_var$agg),
+                ifelse(!is.null(var_num), "sum", "count"), info_var$agg)
 
   data_to_select <- dsdataprep::aggregation_data(data = data_to_select,
                                                  agg = agg,
