@@ -9,9 +9,9 @@ render_sing <- function(session,
   inputs_user <- reactiveValues()
   inputs_data <- reactiveValues()
 
-  # if (class(input_params) == "character") {
-  #   input_params <- read_params(input_params)
-  # }
+  if (class(input_params) == "character") {
+    input_params <- read_params(input_params)
+  }
 
   id_inputs <- setdiff(names(input_params$inputs), c("exclude", "include"))
 

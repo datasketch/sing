@@ -136,11 +136,11 @@ filter_ranges <- function(data, range, by) {
 }
 
 
-# read_params <- function(path) {
-#   if (is.null(path)) stop("You must enter a path")
-#   ext <- substring(path, regexpr("\\.([[:alnum:]]+)$", path) + 1L)
-#   if (ext == "json")  file <- jsonlite::read_json(path)
-#   if (ext == "yaml") file <- yaml::read_yaml(path)
-#   file
-# }
+read_params <- function(path) {
+  if (is.null(path)) stop("You must enter a path")
+  ext <- substring(path, regexpr("\\.([[:alnum:]]+)$", path) + 1L)
+  if (ext == "json")  file <- jsonlite::read_json(path)
+  if (ext == "yaml") file <- yaml::read_yaml(path)
+  file
+}
 
