@@ -17,7 +17,6 @@ select_logic <- function(d, df, input, input_params, sing_values) {
     var_select <- NULL
     var_opts <- var[[v]]
     if ("what" %in% names(var_opts)) {
-      print(var_opts$what)
       var_select <- input[[var_opts$what]]
     } else {
       var_select <- var_opts
