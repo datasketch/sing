@@ -40,30 +40,31 @@ render_sing <- function(session,
       df
     }, .init = df)
 
+    df_select <- NULL
     if (!is.null(df)) {
       if (nrow(df) > 0) {
         if ("data_filter" %in% names(input_params)) {
           data_filter_cond <- input_params$data_filter
-          df <- purrr::map_df(names(data_filter_cond), function(d) {
+          df_select <- lapply(names(data_filter_cond), function(d) {
             if (input[["what_table_input"]] != d) return(df)
             conf_list <- data_filter_cond[[d]]
             if ("arg" %in% names(conf_list[[1]])) {
               conf_list[[1]]$arg <- input[[conf_list[[1]]$arg]]
             }
             perform_operations(df, operations = conf_list)
-          })
+          })[[1]]
         }
+        df_select <- theme_viz_func(df = df_select,
+                             input = input,
+                             input_params = input_params,
+                             sing_values=sing_values)
       }
     }
 
-    opts_viz <- theme_viz_func(df = df,
-                               input = input,
-                               input_params = input_params,
-                               sing_values=sing_values)
 
     list(
-      data_filter = df,
-      opts_viz = opts_viz
+    data_filter = df,
+    opts_viz = df_select
     )
 
   })
@@ -74,7 +75,7 @@ render_sing <- function(session,
 
   observe({
 
-    data_server$filter <- data_filter()$data_filter
+    data_server$data_filter <- data_filter()$data_filter
     data_server$opts_viz <- data_filter()$opts_viz
 
     if (!is.null(input[["what_table_input"]])) {
