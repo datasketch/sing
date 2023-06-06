@@ -30,10 +30,12 @@ render_sing <- function(session,
         if (nrow(info_var) == 0) return(df)
         list_filters <- inputs_user[[id]]
         names(list_filters) <- name_var
-        if (info_var$hdtype %in% c("Cat", "Yea")) {
+
+        if (info_var$hdtype %in% c("Cat", "Yea", "Num")) {
           df <- df |> dplyr::filter(!!dplyr::sym(name_var) %in% inputs_user[[id]])
         }
-        if (info_var$hdtype == "Dat" || info_var$hdtype == "Num") {
+
+        if (info_var$hdtype == "Dat") {
           df <- df |> filter_ranges(range = inputs_user[[id]], by = info_var$id)
         }
       }
@@ -75,7 +77,7 @@ render_sing <- function(session,
 
   observe({
 
-    data_server$data_filter <- data_filter()$data_filter
+   data_server$data_filter <- data_filter()$data_filter
     data_server$opts_viz <- data_filter()$opts_viz
 
     if (!is.null(input[["what_table_input"]])) {
@@ -103,8 +105,6 @@ render_sing <- function(session,
     })
 
   })
-
-
 
 
   list(
