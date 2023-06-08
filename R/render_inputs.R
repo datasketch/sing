@@ -1,4 +1,76 @@
 #' @export
+data_filter_sing <- function(input,
+                             bd,
+                             input_params,
+                             sing_values = NULL) {
+
+  if (class(input_params) == "character") {
+    input_params <- read_params(input_params)
+  }
+  if (is.null(bd)) return()
+  if (is.null(input_params)) return()
+
+  table_user <- input[["what_table_input"]]
+  if (is.null(table_user) ||
+      is.na(table_user) || table_user == "") return()
+
+
+  id_inputs <- names(input_params$inputs)[grep(table_user, names(input_params$inputs))]
+  if (identical(id_inputs, integer())) return()
+
+
+  df <- bd$hdtables[[table_user]]$data
+  dic <- bd$hdtables[[table_user]]$dic
+
+  df <- purrr::reduce(id_inputs, function(df, id) {
+    if (id != "what_table_input" && !is.null(input[[id]])) {
+      name_var <- input_params$inputs[[id]]$id
+      info_var <- dic |> dplyr::filter(id %in% name_var)
+      if (nrow(info_var) == 0) return(df)
+      list_filters <- input[[id]]
+      names(list_filters) <- name_var
+
+      if (info_var$hdtype %in% c("Cat", "Yea", "Num")) {
+        df <- df |> dplyr::filter(!!dplyr::sym(name_var) %in% input[[id]])
+      }
+
+      if (info_var$hdtype == "Dat") {
+        df <- df |> filter_ranges(range = input[[id]], by = info_var$id)
+      }
+    }
+    df
+  }, .init = df)
+
+  df_select <- NULL
+  if (!is.null(df)) {
+    if (nrow(df) > 0) {
+      if ("data_filter" %in% names(input_params)) {
+        data_filter_cond <- input_params$data_filter
+        df_select <- lapply(names(data_filter_cond), function(d) {
+          if (table_user != d) return(df)
+          conf_list <- data_filter_cond[[d]]
+          if ("arg" %in% names(conf_list[[1]])) {
+            conf_list[[1]]$arg <- input[[conf_list[[1]]$arg]]
+          }
+          perform_operations(df, operations = conf_list)
+        })[[1]]
+      }
+      df_select <- theme_viz_func(df = df_select,
+                                  input = input,
+                                  input_params = input_params,
+                                  sing_values=sing_values)
+    }
+  }
+
+
+  list(
+    data_filter = df,
+    opts_viz = df_select
+  )
+
+}
+
+#' @export
 render_sing <- function(session,
                         input,
                         bd,
@@ -9,83 +81,17 @@ render_sing <- function(session,
   inputs_user <- reactiveValues()
   inputs_data <- reactiveValues()
 
-  if (class(input_params) == "character") {
-    input_params <- read_params(input_params)
-  }
 
-  id_inputs <- setdiff(names(input_params$inputs), c("exclude", "include"))
-
-
-  data_filter <- reactive({
-    if (is.null(input[["what_table_input"]]) ||
-        is.na(input[["what_table_input"]]) || input[["what_table_input"]] == "") return()
-
-    df <- data_server[[input[["what_table_input"]]]]
-    dic <- bd$hdtables[[input[["what_table_input"]]]]$dic
-
-    df <- purrr::reduce(id_inputs, function(df, id) {
-      if (id != "what_table_input" && !is.null(inputs_user[[id]])) {
-        name_var <- input_params$inputs[[id]]$id
-        info_var <- dic |> dplyr::filter(id %in% name_var)
-        if (nrow(info_var) == 0) return(df)
-        list_filters <- inputs_user[[id]]
-        names(list_filters) <- name_var
-
-        if (info_var$hdtype %in% c("Cat", "Yea", "Num")) {
-          df <- df |> dplyr::filter(!!dplyr::sym(name_var) %in% inputs_user[[id]])
-        }
-
-        if (info_var$hdtype == "Dat") {
-          df <- df |> filter_ranges(range = inputs_user[[id]], by = info_var$id)
-        }
-      }
-      df
-    }, .init = df)
-
-    df_select <- NULL
-    if (!is.null(df)) {
-      if (nrow(df) > 0) {
-        if ("data_filter" %in% names(input_params)) {
-          data_filter_cond <- input_params$data_filter
-          df_select <- lapply(names(data_filter_cond), function(d) {
-            if (input[["what_table_input"]] != d) return(df)
-            conf_list <- data_filter_cond[[d]]
-            if ("arg" %in% names(conf_list[[1]])) {
-              conf_list[[1]]$arg <- input[[conf_list[[1]]$arg]]
-            }
-            perform_operations(df, operations = conf_list)
-          })[[1]]
-        }
-        df_select <- theme_viz_func(df = df_select,
-                             input = input,
-                             input_params = input_params,
-                             sing_values=sing_values)
-      }
-    }
-
-
-    list(
-    data_filter = df,
-    opts_viz = df_select
-    )
-
-  })
-
-
-
-
+  id_inputs <- names(input_params$inputs)
 
   observe({
-
-   data_server$data_filter <- data_filter()$data_filter
-    data_server$opts_viz <- data_filter()$opts_viz
-
-    if (!is.null(input[["what_table_input"]])) {
-      if (input[["what_table_input"]] != "") {
-        data_server[[input[["what_table_input"]]]] <- bd$hdtables[[input[["what_table_input"]]]]$data
+    table_user <- input[["what_table_input"]]
+    if (!is.null(table_user)) {
+      if (table_user != "") {
+        data_server[[table_user]] <- bd$hdtables[[table_user]]$data
       }
     }
-
+    isolate({
     pre_inp <- prepare_inputs(input = input,
                               inputs_data = inputs_data,
                               input_params = input_params,
@@ -94,18 +100,17 @@ render_sing <- function(session,
                               data_server = data_server)
 
 
-    purrr::map(id_inputs, function(id) {
-      inputs_user[[id]] <- input[[id]]
-      if (!is.null(input[[id]])) {
-        update_input(session = session,
-                     input_id = id,
-                     input_type = input_params$inputs[[id]]$input_type,
-                     new_values = input[[id]])
-      }
+      purrr::map(id_inputs, function(id) {
+        inputs_user[[id]] <- input[[id]]
+        if (!is.null(input[[id]])) {
+          update_input(session = session,
+                       input_id = id,
+                       input_type = input_params$inputs[[id]]$input_type,
+                       new_values = input[[id]])
+        }
+      })
     })
-
   })
-
 
   list(
     data_server = data_server,
@@ -114,6 +119,8 @@ render_sing <- function(session,
     input_params = input_params,
     inputs_data = inputs_data
   )
+
+
 }
 
 
