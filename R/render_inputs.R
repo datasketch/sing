@@ -84,14 +84,15 @@ render_sing <- function(session,
 
   id_inputs <- names(input_params$inputs)
 
-  observe({
+
+  reactive({
     table_user <- input[["what_table_input"]]
     if (!is.null(table_user)) {
       if (table_user != "") {
         data_server[[table_user]] <- bd$hdtables[[table_user]]$data
       }
     }
-    isolate({
+
     pre_inp <- prepare_inputs(input = input,
                               inputs_data = inputs_data,
                               input_params = input_params,
@@ -100,17 +101,21 @@ render_sing <- function(session,
                               data_server = data_server)
 
 
-      purrr::map(id_inputs, function(id) {
-        inputs_user[[id]] <- input[[id]]
-        if (!is.null(input[[id]])) {
-          update_input(session = session,
-                       input_id = id,
-                       input_type = input_params$inputs[[id]]$input_type,
-                       new_values = input[[id]])
-        }
-      })
+    purrr::map(id_inputs, function(id) {
+      inputs_user[[id]] <- input[[id]]
+      if (!is.null(input[[id]])) {
+        update_input(session = session,
+                     input_id = id,
+                     input_type = input_params$inputs[[id]]$input_type,
+                     new_values = input[[id]])
+      }
     })
-  })
+  }) |> debounce(5000)
+
+
+  # observe({
+  #   prep_server()
+  # })
 
   list(
     data_server = data_server,
