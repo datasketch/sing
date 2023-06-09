@@ -123,13 +123,17 @@ evaluate_filter_into_input <- function(input,
   if ("filter" %in% names(conditions_into_input)) {
     if (grepl("_input",conditions_into_input$filter$arg)) {
       arg <- input[[conf_list$what$filter$arg]]
+      print("hola")
+      print(arg)
       id_alt <- input_id
+      print(id_alt)
       if (is.null(id_alt)) return()
       if (all(is.null(arg)) || all(arg == "")) {
         if (length(id_alt) == 1) {
-        conditions_into_input <- list("unique" = list("col" = id_alt))
+          conditions_into_input <- list("unique" = list("col" = id_alt))
         } else {
-          conditions_into_input <- list("distinct" = list("col" = id_alt[1], "extra" = list(".keep_all" = TRUE)),
+          conditions_into_input <- list("arrange" = list("col" = id_alt[length(id_alt)]),
+                                        "distinct" = list("col" = id_alt[1], "extra" = list(".keep_all" = TRUE)),
                                         "setNames" = list("col" = id_alt[1], "col_name" = id_alt[2]))
         }
       } else {

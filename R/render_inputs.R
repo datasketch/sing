@@ -27,8 +27,6 @@ data_filter_sing <- function(input,
       name_var <- input_params$inputs[[id]]$id
       info_var <- dic |> dplyr::filter(id %in% name_var)
       if (nrow(info_var) == 0) return(df)
-      list_filters <- input[[id]]
-      names(list_filters) <- name_var
 
       if (info_var$hdtype %in% c("Cat", "Yea", "Num")) {
         df <- df |> dplyr::filter(!!dplyr::sym(name_var) %in% input[[id]])
@@ -85,7 +83,7 @@ render_sing <- function(session,
   id_inputs <- names(input_params$inputs)
 
 
-  reactive({
+  observe({
     table_user <- input[["what_table_input"]]
     if (!is.null(table_user)) {
       if (table_user != "") {
@@ -110,12 +108,7 @@ render_sing <- function(session,
                      new_values = input[[id]])
       }
     })
-  }) |> debounce(5000)
-
-
-  # observe({
-  #   prep_server()
-  # })
+  })
 
   list(
     data_server = data_server,
