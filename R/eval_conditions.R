@@ -123,10 +123,7 @@ evaluate_filter_into_input <- function(input,
   if ("filter" %in% names(conditions_into_input)) {
     if (grepl("_input",conditions_into_input$filter$arg)) {
       arg <- input[[conf_list$what$filter$arg]]
-      print("hola")
-      print(arg)
       id_alt <- input_id
-      print(id_alt)
       if (is.null(id_alt)) return()
       if (all(is.null(arg)) || all(arg == "")) {
         if (length(id_alt) == 1) {

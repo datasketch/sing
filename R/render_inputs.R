@@ -101,13 +101,13 @@ render_sing <- function(session,
 
     purrr::map(id_inputs, function(id) {
       inputs_user[[id]] <- input[[id]]
-      if (!is.null(input[[id]])) {
-        update_input(session = session,
-                     input_id = id,
-                     input_type = input_params$inputs[[id]]$input_type,
-                     new_values = input[[id]])
-      }
-    })
+    #   if (!is.null(input[[id]])) {
+    #     update_input(session = session,
+    #                  input_id = id,
+    #                  input_type = input_params$inputs[[id]]$input_type,
+    #                  new_values = input[[id]])
+    #   }
+     })
   })
 
   list(
