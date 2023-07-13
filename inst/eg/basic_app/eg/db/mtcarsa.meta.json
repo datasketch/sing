@@ -1,0 +1,11 @@
+{
+  "name": "MTCARS",
+  "description": "",
+  "slug": "mtcarsa",
+  "formats": ["csv", "json"],
+  "hdtable_type": "Num-Num-Num-Num-Num-Num-Num-Num-Num-Num-Num",
+  "hdtable_type_group": "Num11",
+  "nrow": 32,
+  "ncol": 11,
+  "credits": "Dataset hosted at http://datasketch.co"
+}

@@ -1,0 +1,178 @@
+[
+  {
+    "id": "mpg",
+    "label": "mpg",
+    "hdtype": "Num",
+    "format": {
+      "spec": "%f"
+    },
+    "stats": {
+      "n_unique": 25,
+      "n_na": 0,
+      "pct_na": 0,
+      "min": 10.4,
+      "max": 33.9
+    },
+    "fld___id": "17rfjwx8"
+  },
+  {
+    "id": "cyl",
+    "label": "cyl",
+    "hdtype": "Num",
+    "format": {
+      "spec": "%f"
+    },
+    "stats": {
+      "n_unique": 3,
+      "n_na": 0,
+      "pct_na": 0,
+      "min": 4,
+      "max": 8
+    },
+    "fld___id": "oy3tsdbl"
+  },
+  {
+    "id": "disp",
+    "label": "disp",
+    "hdtype": "Num",
+    "format": {
+      "spec": "%f"
+    },
+    "stats": {
+      "n_unique": 27,
+      "n_na": 0,
+      "pct_na": 0,
+      "min": 71.1,
+      "max": 472
+    },
+    "fld___id": "zj5qx8i7"
+  },
+  {
+    "id": "hp",
+    "label": "hp",
+    "hdtype": "Num",
+    "format": {
+      "spec": "%f"
+    },
+    "stats": {
+      "n_unique": 22,
+      "n_na": 0,
+      "pct_na": 0,
+      "min": 52,
+      "max": 335
+    },
+    "fld___id": "lbn9wk1k"
+  },
+  {
+    "id": "drat",
+    "label": "drat",
+    "hdtype": "Num",
+    "format": {
+      "spec": "%f"
+    },
+    "stats": {
+      "n_unique": 22,
+      "n_na": 0,
+      "pct_na": 0,
+      "min": 2.76,
+      "max": 4.93
+    },
+    "fld___id": "uthapf2o"
+  },
+  {
+    "id": "wt",
+    "label": "wt",
+    "hdtype": "Num",
+    "format": {
+      "spec": "%f"
+    },
+    "stats": {
+      "n_unique": 29,
+      "n_na": 0,
+      "pct_na": 0,
+      "min": 1.513,
+      "max": 5.424
+    },
+    "fld___id": "ohyrwoec"
+  },
+  {
+    "id": "qsec",
+    "label": "qsec",
+    "hdtype": "Num",
+    "format": {
+      "spec": "%f"
+    },
+    "stats": {
+      "n_unique": 30,
+      "n_na": 0,
+      "pct_na": 0,
+      "min": 14.5,
+      "max": 22.9
+    },
+    "fld___id": "72nryi4k"
+  },
+  {
+    "id": "vs",
+    "label": "vs",
+    "hdtype": "Num",
+    "format": {
+      "spec": "%f"
+    },
+    "stats": {
+      "n_unique": 2,
+      "n_na": 0,
+      "pct_na": 0,
+      "min": 0,
+      "max": 1
+    },
+    "fld___id": "e0oxfshe"
+  },
+  {
+    "id": "am",
+    "label": "am",
+    "hdtype": "Num",
+    "format": {
+      "spec": "%f"
+    },
+    "stats": {
+      "n_unique": 2,
+      "n_na": 0,
+      "pct_na": 0,
+      "min": 0,
+      "max": 1
+    },
+    "fld___id": "kx97gejn"
+  },
+  {
+    "id": "gear",
+    "label": "gear",
+    "hdtype": "Num",
+    "format": {
+      "spec": "%f"
+    },
+    "stats": {
+      "n_unique": 3,
+      "n_na": 0,
+      "pct_na": 0,
+      "min": 3,
+      "max": 5
+    },
+    "fld___id": "0ps5yexd"
+  },
+  {
+    "id": "carb",
+    "label": "carb",
+    "hdtype": "Num",
+    "format": {
+      "spec": "%f"
+    },
+    "stats": {
+      "n_unique": 6,
+      "n_na": 0,
+      "pct_na": 0,
+      "min": 1,
+      "max": 8
+    },
+    "fld___id": "f0fbvero"
+  }
+]

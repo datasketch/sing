@@ -1,0 +1,135 @@
+{
+  "name": "db",
+  "description": "",
+  "slug": "db",
+  "formats": ["csv", "json"],
+  "credits": {},
+  "hdtable_type": [],
+  "hdtable_type_group": [],
+  "hdtables_slugs": ["iris", "mtcarsa"],
+  "license": "MIT",
+  "hdtables_meta": {
+    "iris": {
+      "name": "Iris",
+      "description": "",
+      "slug": "iris",
+      "formats": ["csv", "json"],
+      "hdtable_type": "Num-Num-Num-Num-Cat",
+      "hdtable_type_group": "Cat-Num4",
+      "nrow": 150,
+      "ncol": 5,
+      "credits": "Dataset hosted at http://datasketch.co"
+    },
+    "mtcarsa": {
+      "name": "MTCARS",
+      "description": "",
+      "slug": "mtcarsa",
+      "formats": ["csv", "json"],
+      "hdtable_type": "Num-Num-Num-Num-Num-Num-Num-Num-Num-Num-Num",
+      "hdtable_type_group": "Num11",
+      "nrow": 32,
+      "ncol": 11,
+      "credits": "Dataset hosted at http://datasketch.co"
+    }
+  },
+    "inputs":{
+      "what_table_input":{
+         "input_type":"selectizeInput",
+         "input_params":{
+            "label":"Seleccione datos de interés",
+            "choices":{
+               "what":"hdtables_meta.name"
+            }
+         }
+      },
+      "iris_species_input": {
+        "id": "species",
+         "conditions": { // aca van las condiciones, este filtro solo se muestra si se selecciona iris
+           "what_table_input": {
+             "equals": "iris"
+           }
+         },
+        "input_type": "selectizeInput",
+        "input_params": {
+          "label": "Especie",
+          "choices": {
+             "what":{
+                  "table_id":"iris",
+           "unique":{
+                     "col":"species"
+                  }
+            }
+          }
+        }
+        },
+        "generic_input": { // este es un filtro basico, sin condiciones, sale siempre
+          "input_type": "radioButtons",
+          "input_params":{
+          "label": "Ejemplo",
+          "choices": ["a", "b", "c"]
+          }
+          },
+        "iris_petal_width_input":{
+          "id": "petal_width",
+          "conditions": {
+           "what_table_input": {
+             "equals": "iris"
+           }
+         },
+         "input_type": "selectizeInput",
+         "input_params":{
+            "label": {
+              "what": "label_iris"},
+         "choices":{ // este input depende de la seleccion anterior, asi que se filtra la variable segun la seleccion
+               "what":{
+                  "table_id":"iris",
+                  "filter":{
+                     "col":"species",
+                     "condition":"in",
+                     "arg":"iris_species_input"
+                  },
+                  "unique":{
+                     "col":"petal_width"
+                  }
+                 }
+               }
+            }
+        },
+      "mtcarsa_carb_input":{
+         "id":"carb",
+         "conditions":{
+            "what_table_input":{
+               "equals":"mtcarsa"
+            }
+         },
+         "input_type":"numberInput",
+         "input_params":{
+            "label":"Carb",
+            "min":{
+               "what":{
+                  "table_id":"mtcarsa",
+                  "min":{
+                     "col":"carb",
+                     "extra":{
+                        "na.rm":true
+                     }
+                  }
+               }
+            },
+            "max":{
+               "what":{
+                  "table_id":"mtcarsa",
+                  "max":{
+                     "col":"carb",
+                     "extra":{
+                        "na.rm":true
+                     }
+                  }
+               }
+            },
+            "value": 3,
+            "step": 1
+            }
+      }
+    }
+}

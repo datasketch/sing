@@ -1,0 +1,35 @@
+{
+  "name": "db",
+  "description": "",
+  "slug": "db",
+  "formats": ["csv", "json"],
+  "credits": {},
+  "hdtable_type": [],
+  "hdtable_type_group": [],
+  "hdtables_slugs": ["iris", "mtcarsa"],
+  "license": "MIT",
+  "hdtables_meta": {
+    "iris": {
+      "name": "Iris",
+      "description": "",
+      "slug": "iris",
+      "formats": ["csv", "json"],
+      "hdtable_type": "Num-Num-Num-Num-Cat",
+      "hdtable_type_group": "Cat-Num4",
+      "nrow": 150,
+      "ncol": 5,
+      "credits": "Dataset hosted at http://datasketch.co"
+    },
+    "mtcarsa": {
+      "name": "MTCARS",
+      "description": "",
+      "slug": "mtcarsa",
+      "formats": ["csv", "json"],
+      "hdtable_type": "Num-Num-Num-Num-Num-Num-Num-Num-Num-Num-Num",
+      "hdtable_type_group": "Num11",
+      "nrow": 32,
+      "ncol": 11,
+      "credits": "Dataset hosted at http://datasketch.co"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Iris",
+  "description": "",
+  "slug": "iris",
+  "formats": ["csv", "json"],
+  "hdtable_type": "Num-Num-Num-Num-Cat",
+  "hdtable_type_group": "Cat-Num4",
+  "nrow": 150,
+  "ncol": 5,
+  "credits": "Dataset hosted at http://datasketch.co"
+}

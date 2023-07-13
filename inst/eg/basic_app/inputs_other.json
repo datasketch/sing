@@ -1,0 +1,137 @@
+{
+  "inputs": {
+    "what_table_input": {
+        "input_type": "selectizeInput",
+        "input_params": {
+          "label": "Seleccione tabla",
+          "choices": ["iris", "mtcars"]
+          }
+      },
+      "num_edad_input": {
+        "id": "edad",
+        "input_type": "numberInput",
+        "input_params": {
+        "label": "Edad",
+        "value": 15,
+        "min": 7,
+        "max": 40,
+        "step": 1
+       }
+      },
+      "cat_estrato_input": {
+        "id": "estrato",
+        "input_type": "selectizeInput",
+        "input_params": {
+          "label": "Estrato",
+          "choices": ["bajo", "medio", "alto"]
+        }
+        },
+      "num_ingresos_input": {
+        "id": "ingresos",
+        "input_type": "numberInput",
+        "input_params": {
+        "label": "Ingresos",
+        "value": 5,
+        "min": 4,
+        "max": 20,
+        "step": 1
+       }
+      },
+        "iris_petal_length": {
+          "id": "petal_length",
+           "input_type":"selectizeInput",
+         "input_params":{
+            "label":"petal_length",
+            "choices":{
+               "what":{
+                  "table_id":"iris",
+                    "filter": {
+                     "col":"sepal_length",
+                     "condition":"less_than",
+                     "arg":"num_ingresos_input"
+                    },
+                  "filter2":{
+                     "col":"species",
+                     "condition":"in",
+                     "arg":"iris_species_input"
+                    },
+                  "unique": {
+                    "col": "petal_width"
+                  }
+               }
+            }
+        }
+    },
+        "iris_species_input": {
+          "id": "species",
+        "table_id": "iris",
+         "conditions": {
+           "what_table_input": {
+             "equals": "iris"
+           }
+         },
+        "input_type": "selectizeInput",
+        "input_params": {
+          "label": "Especie",
+          "choices": ["setosa", "versicolor", "virginica"]
+        }
+        }
+    },
+    "data_filter": {
+      "iris": {
+                "filter":{
+                    "col": "species",
+                    "condition": "in",
+                    "arg": "iris_species_input"
+                }
+      }
+    },
+       "selector": {
+        "iris": {
+          "id": {
+            "what": "viz_active"
+          },
+          "bar": {
+            "var_select": {
+              "var_cat": "species",
+              "var_num": {
+                "what": "num_id"
+              }
+            },
+            "agg": "sum",
+            "agg_name": "Suma",
+            "titles": {
+              "title": "Species de datos iris",
+              "hor_title": "Species",
+              "ver_title": "Suma de especies"
+            }
+          },
+          "pie": {
+            "var_select": {
+            "var_cat": "species",
+            "var_num": "sepal_width"
+            },
+            "agg": "mean",
+            "agg_name": "Promedio",
+            "titles": {
+              "title": "Ancho de especies",
+              "hor_title": "Especies",
+              "ver_title": "Promedio de especies"
+            }
+          }
+
+      }
+       },
+       "theme": {
+         "palette_colors":  [
+          "#3a3766",
+          "#5b5fde",
+          "#ec58c9",
+          "#ffa92a",
+          "#fcd381",
+          "#78e1b4",
+          "#2d7567"
+        ],
+        "background_color": "#FFFFFF"
+       }
+}

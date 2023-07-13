@@ -1,0 +1,6 @@
+id,label,hdtype,format,stats,fld___id
+sepal_length,Sepal.Length,Num,"{""spec"":""%f""}","{""n_unique"":35,""n_na"":0,""pct_na"":0,""min"":4.3,""max"":7.9}",i02tk2p1
+sepal_width,Sepal.Width,Num,"{""spec"":""%f""}","{""n_unique"":23,""n_na"":0,""pct_na"":0,""min"":2,""max"":4.4}",xhqf9wek
+petal_length,Petal.Length,Num,"{""spec"":""%f""}","{""n_unique"":43,""n_na"":0,""pct_na"":0,""min"":1,""max"":6.9}",l31sn5lv
+petal_width,Petal.Width,Num,"{""spec"":""%f""}","{""n_unique"":22,""n_na"":0,""pct_na"":0,""min"":0.1,""max"":2.5}",1sq2u5if
+species,Species,Cat,"{""categories"":[{""category"":""setosa"",""label"":""Setosa""},{""category"":""versicolor"",""label"":""Versicolor""},{""category"":""virginica"",""label"":""Virginica""}],""n_categories"":3,""spec"":{}}","{""n_unique"":3,""n_na"":0,""pct_na"":0,""summary"":[{""category"":""setosa"",""n"":50,""dist"":0.3333,""dist_no_na"":0.3333},{""category"":""versicolor"",""n"":50,""dist"":0.3333,""dist_no_na"":0.3333},{""category"":""virginica"",""n"":50,""dist"":0.3333,""dist_no_na"":0.3333},{""n"":0,""dist"":0}]}",xdpap45g
